@@ -23,26 +23,41 @@ protected:
 private:
     const int MULTI_READ_DELAY = 1; // 200
     const int MULTI_READ_TIMES = 5;
+private:
+    int getMultiReadData(const long& address);
+    bool IsValidReading(const long& address, const int& ReadedData);
 };
 
 DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware) : m_hardware(hardware)
 {}
 
+
 int DeviceDriver::read(long address)
 {
-    int readData = 0;
-    for (int i = 1; i < MULTI_READ_TIMES; i++) {
-        readData |= m_hardware->read(address);
-        Sleep(1);
-    }
-    if (readData != m_hardware->read(address))
+	int multiReadData = getMultiReadData(address);
+	if (IsValidReading(address, multiReadData))
         throw ReadFailException();
 
-    return readData;
+    return multiReadData;
 }
 
 void DeviceDriver::write(long address, int data)
 {
     // TODO: implement this method
     m_hardware->write(address, (unsigned char)data);
+}
+
+int DeviceDriver::getMultiReadData(const long& address)
+{
+    int readData = 0;
+    for (int i = 1; i < MULTI_READ_TIMES; i++) {
+        readData |= m_hardware->read(address);
+        Sleep(1);
+    }
+    return readData;
+}
+
+bool DeviceDriver::IsValidReading(const long& address, const int& ReadedData)
+{
+    return ReadedData != m_hardware->read(address);
 }
