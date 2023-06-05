@@ -27,6 +27,8 @@ TEST(MockTest, TCREAD_01)
 	EXPECT_CALL(fmdm, read(_))
 		.WillOnce(Return(0x0B))
 		.WillRepeatedly(Return(0x0A));
+
+	EXPECT_CALL(fmdm, read(_)).Will
 	EXPECT_THROW(dd.read(0X00), ReadFailException);
 }
 
@@ -36,5 +38,6 @@ TEST(MockTest, TCREAD_02)
 	DeviceDriver dd(&fmdm);
 	EXPECT_CALL(fmdm, read(_))
 		.Times(5);
+
 	EXPECT_THAT(0, Eq(dd.read(0X00)));
 }

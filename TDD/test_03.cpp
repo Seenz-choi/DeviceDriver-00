@@ -21,7 +21,7 @@ public:
 protected:
     FlashMemoryDevice* m_hardware;
 private:
-    const int MULTI_READ_DELAY = 1; // 200
+    const int MULTI_READ_DELAY = 200; // 200
     const int MULTI_READ_TIMES = 5;
 private:
     int getMultiReadData(const long& address);
