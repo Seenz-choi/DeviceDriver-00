@@ -10,6 +10,8 @@ public:
 
 class ReadFailException : public std::exception
 {};
+class WriteFailException : public std::exception
+{};
 
 class DeviceDriver
 {
@@ -43,8 +45,10 @@ int DeviceDriver::read(long address)
 
 void DeviceDriver::write(long address, int data)
 {
-    // TODO: implement this method
-    m_hardware->write(address, (unsigned char)data);
+    if (m_hardware->read(address) != 0xFF) {
+        throw WriteFailException();
+    }
+	m_hardware->write(address, (unsigned char)data);
 }
 
 int DeviceDriver::getMultiReadData(const long& address)

@@ -27,17 +27,26 @@ TEST(MockTest, TCREAD_01)
 	EXPECT_CALL(fmdm, read(_))
 		.WillOnce(Return(0x0B))
 		.WillRepeatedly(Return(0x0A));
-
-	EXPECT_CALL(fmdm, read(_)).Will
+	
 	EXPECT_THROW(dd.read(0X00), ReadFailException);
 }
 
-TEST(MockTest, TCREAD_02)
+TEST(MockTest, TCWRITE_00)
 {
 	FlashMemoryDeviceMock fmdm;
 	DeviceDriver dd(&fmdm);
 	EXPECT_CALL(fmdm, read(_))
-		.Times(5);
+		.WillRepeatedly(Return(0x0A));
 
-	EXPECT_THAT(0, Eq(dd.read(0X00)));
+	EXPECT_THROW(dd.write(0X00, 0x0B), WriteFailException);
+}
+
+TEST(MockTest, TCWRITE_01)
+{
+	FlashMemoryDeviceMock fmdm;
+	DeviceDriver dd(&fmdm);
+	EXPECT_CALL(fmdm, read(_))
+		.Times(1)
+		.WillRepeatedly(Return(0xFF));
+	dd.write(0X00, 0x0B);
 }
