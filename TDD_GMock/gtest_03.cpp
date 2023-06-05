@@ -61,3 +61,14 @@ TEST(MockTest, TCAPP_ReadAndPrint_00)
 
 	EXPECT_THAT(string("3,3,3,"), StrEq(app.ReadAndPrint(0x00, 0x03)));
 }
+
+TEST(MockTest, TCAPP_WriteAll_00)
+{
+	FlashMemoryDeviceMock fmdm;
+	DeviceDriver dd(&fmdm);
+	APPside app(&dd);
+	EXPECT_CALL(fmdm, read(_))
+		.WillRepeatedly(Return(0xFF));
+
+	app.WriteAll(0x03);
+}

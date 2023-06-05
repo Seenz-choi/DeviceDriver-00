@@ -84,7 +84,10 @@ public:
     }
     void WriteAll(int value)
     {
-
+        std::string result;
+        for (int i = 0; i < 5; i++) {
+            devicedriver_->write(i, value);
+        }
     }
 private:
     DeviceDriver* devicedriver_;
