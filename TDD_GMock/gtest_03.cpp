@@ -40,3 +40,13 @@ TEST(MockTest, TCWRITE_00)
 
 	EXPECT_THROW(dd.write(0X00, 0x0B), WriteFailException);
 }
+
+TEST(MockTest, TCWRITE_01)
+{
+	FlashMemoryDeviceMock fmdm;
+	DeviceDriver dd(&fmdm);
+	EXPECT_CALL(fmdm, read(_))
+		.WillRepeatedly(Return(0xFF));
+
+	EXPECT_THROW(dd.write(0X00, 0x0B), WriteFailException);
+}
