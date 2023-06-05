@@ -29,3 +29,12 @@ TEST(MockTest, TCREAD_01)
 		.WillRepeatedly(Return(0x0A));
 	EXPECT_THROW(dd.read(0X00), ReadFailException);
 }
+
+TEST(MockTest, TCREAD_02)
+{
+	FlashMemoryDeviceMock fmdm;
+	DeviceDriver dd(&fmdm);
+	EXPECT_CALL(fmdm, read(_))
+		.Times(5);
+	EXPECT_THAT(0, Eq(dd.read(0X00)));
+}

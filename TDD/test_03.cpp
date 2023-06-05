@@ -1,4 +1,5 @@
 #include <iostream>
+#include <windows.h>
 
 class FlashMemoryDevice
 {
@@ -19,6 +20,9 @@ public:
 
 protected:
     FlashMemoryDevice* m_hardware;
+private:
+    const int MULTI_READ_DELAY = 1; // 200
+    const int MULTI_READ_TIMES = 5;
 };
 
 DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware) : m_hardware(hardware)
@@ -27,8 +31,10 @@ DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware) : m_hardware(hardware)
 int DeviceDriver::read(long address)
 {
     int readData = 0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 1; i < MULTI_READ_TIMES; i++) {
         readData |= m_hardware->read(address);
+        Sleep(1);
+    }
     if (readData != m_hardware->read(address))
         throw ReadFailException();
 
