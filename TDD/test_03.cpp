@@ -1,9 +1,14 @@
+#include <iostream>
+
 class FlashMemoryDevice
 {
 public:
     virtual unsigned char read(long address) = 0;
     virtual void write(long address, unsigned char data) = 0;
 };
+
+class ReadFailException : public std::exception
+{};
 
 class DeviceDriver
 {
@@ -25,7 +30,8 @@ int DeviceDriver::read(long address)
     for (int i = 0; i < 4; i++)
         readData |= m_hardware->read(address);
     if (readData != m_hardware->read(address))
-        return -1;
+        throw ReadFailException();
+
     return readData;
 }
 
