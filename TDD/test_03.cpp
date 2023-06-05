@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <windows.h>
 
 class FlashMemoryDevice
@@ -65,3 +66,26 @@ bool DeviceDriver::IsValidReading(const long& address, const int& ReadedData)
 {
     return ReadedData != m_hardware->read(address);
 }
+
+class APPside
+{
+public:
+    APPside(DeviceDriver* dd) : devicedriver_(dd)
+    {}
+
+    std::string ReadAndPrint(int startAddr, int endAddr)
+    {
+        std::string result;
+	    for(int i = startAddr; i < endAddr; i++) {
+            result += std::to_string(devicedriver_->read(startAddr + i));
+            result += ",";
+	    }
+        return result;
+    }
+    void WriteAll(int value)
+    {
+
+    }
+private:
+    DeviceDriver* devicedriver_;
+};
