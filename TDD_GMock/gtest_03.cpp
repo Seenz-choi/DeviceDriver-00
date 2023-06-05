@@ -1,10 +1,22 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../TDD/test_03.cpp"
+#include "windows.h"
 using namespace testing;
 using namespace std;
 
-TEST(MockTest, TC00)
+class FlashMemoryDeviceMock : public FlashMemoryDevice
 {
-	EXPECT_THAT(1, Eq(1));
+public:
+	MOCK_METHOD(unsigned char, read, (long addr), (override));
+	MOCK_METHOD(void, write, (long addr, unsigned char data), (override));
+};
+
+TEST(MockTest, TCREAD_00)
+{
+	FlashMemoryDeviceMock fmdm;
+	DeviceDriver dd(&fmdm);
+	EXPECT_CALL(fmdm, read(_))
+		.WillRepeatedly(Return(0x0A));
+	EXPECT_THAT(0x0A, dd.read(0X00));
 }
